@@ -15,15 +15,12 @@ if(!file.exists("household_power_consumption.txt")){
         unzip(zipfolder)
 }
 
-#read in the dataset
+#read in the dataset & subset to the two dates we want. 
 powerconsump <- fread("household_power_consumption.txt")
+ourdates <- powerconsump[powerconsump$Date == "1/2/2007" | powerconsump$Date == "2/2/2007",]
 
 #combine date and time into one column
-powerconsump$datetime <- paste(powerconsump$Date, powerconsump$Time, sep = " ")
-
-#subset to the two dates
-powerconsump$Date <- as.Date(powerconsump$Date, format = "%d/%m/%Y")
-ourdates <- powerconsump[powerconsump$Date == "2007-02-01" | powerconsump$Date == "2007-02-02",]
+ourdates$datetime <- paste(ourdates$Date, ourdates$Time, sep = " ")
 
 #convert date time
 ourdates$datetime <- dmy_hms(ourdates$datetime)
@@ -31,7 +28,6 @@ ourdates$datetime <- dmy_hms(ourdates$datetime)
 #make the first plot
 hist(as.numeric(ourdates$Global_active_power),
      xlab = "Global Active Power (kilowatts)",
-     ylab = "Frequency",
      main = "Global Active Power",
      col  = "red")
 
